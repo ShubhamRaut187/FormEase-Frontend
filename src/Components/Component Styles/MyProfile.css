@@ -1,0 +1,53 @@
+.my_profile_main{
+    width: 30%;
+    height: 450px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background-color: #222e50;
+    /* border: 2px solid red; */
+    border-radius: 5px;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+}
+.my_profile_main>h1{
+    text-align: center;
+    font-weight: 900;
+    color: #fccb06;
+    margin-bottom: 2px;
+}
+.my_profile_main>h3{
+    text-align: center;
+    font-weight: 900;
+    color: #edf7f6;
+    margin-top: 0px;
+}
+.my_profile_main>button{
+    width: 35%;
+    height: 35px;
+    background-color: #fccb06;
+    color: #222e50;
+    font-weight: 700;
+    font-size: 16px;
+    text-align: center;
+    border: none;
+    border-radius: 5px;
+}
+.my_profile_main>button:hover{
+    background-color: #edf7f6;
+    color: #222e50;
+}
+/* Media */
+/* Small Screens */
+@media screen and (min-width:320px) and (max-width:767px){
+    .my_profile_main{
+        width:100%
+    }
+ }
+ 
+ /* Medium Screens */
+ @media screen and (min-width:768px) and (max-width:1024px){
+    .my_profile_main>h3{
+        font-size: 12px;
+    }
+ }
