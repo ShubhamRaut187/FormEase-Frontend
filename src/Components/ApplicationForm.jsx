@@ -59,8 +59,9 @@ function ApplicationForm(props) {
     e.preventDefault();
     SetLoading(true)
     if(!Photo || !Name || !DOB || !Address){
-        return alert('All feilds required')
         SetLoading(false)
+        return alert('All feilds required')
+        
     }
     let data = new FormData();
     data.append('file',Photo);
