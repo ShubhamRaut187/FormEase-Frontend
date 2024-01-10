@@ -3,21 +3,24 @@ import './Component Styles/LoginForm.css'
 import { useDispatch } from 'react-redux';
 import {handlelogin} from '../Redux/actions'
 import { useNavigate } from 'react-router-dom';
+import LoadingComp from './LoadingComp';
 
 function LoginForm({SetPage}) {
     let [Email,SetEmail] = useState('');
     let [Password,SetPassword] = useState('');
+    let [Loading,SetLoading] = useState(false);
     let dispatch = useDispatch();
     let Navigate = useNavigate();
 
     let validateuser = async(e) => {
         e.preventDefault();
+        SetLoading(true);
+        // console.log(Email,Password);
         if(!Email || !Password){
+            SetLoading(false);
             return alert('Please fill all fields...!');
         }
-        
-        try {
-            let result = await fetch('http://localhost:8000/auth/v1/login',{
+        fetch('https://formeaseserver.onrender.com/auth/v1/login',{
                 method:'POST',
                 headers:{
                     'Content-Type':'application/json'
@@ -26,20 +29,26 @@ function LoginForm({SetPage}) {
                     Email,
                     Password
                 })
-            });
-
-            let response = await result.json();
-            if(response.Message === 'Login Successfull.'){
-                dispatch(handlelogin(response));
-                alert(response.Message);
-                Navigate('/');
-            }
-            else{
-                alert(response.Message);
-            }
-        } catch (error) {
-            console.log(error);
-        }
+            }).then((response)=>{
+                return response.json();
+            }).then((response)=>{
+                if(response.Message === 'Login Successfull.'){
+                    dispatch(handlelogin(response))
+                    alert(response.Message);
+                    SetLoading(false);
+                    Navigate('/')
+                }
+                else{
+                    alert(response.Message);
+                    SetLoading(false);
+                }
+                // console.log(response);
+            }).catch((error)=>{
+                console.log(error);
+                SetLoading(true);
+            })
+            
+        
     }
     
     return (
@@ -51,7 +60,8 @@ function LoginForm({SetPage}) {
             <div className='login_form_div'>
                 <h2>Login to your account.</h2>
                 <p>Kindly enter your registered email and password to access your FormEase account.</p>
-                <form className='login_form' onSubmit={validateuser}>
+                {
+                    Loading ? <LoadingComp Text={'Logging in...!'}/> : <form className='login_form' onSubmit={validateuser}>
                     <label>Email *</label>
                     <input className='login_form_input' type="email"  placeholder='Email'onChange={(e)=>{
                         SetEmail(e.target.value);
@@ -62,6 +72,7 @@ function LoginForm({SetPage}) {
                     }}/>
                     <input className='login_form_submit_btn' type="submit" value='Login'/>
                 </form>
+                }
                 <p className='login_signup_text' onClick={()=>{
                     SetPage({
                         Title:'Signup',

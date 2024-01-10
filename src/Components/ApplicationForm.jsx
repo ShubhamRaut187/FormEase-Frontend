@@ -2,13 +2,15 @@ import React,{useState} from 'react';
 import './Component Styles/ApplicationForm.css'
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import LoadingComp from './LoadingComp';
 
 function ApplicationForm(props) {
    let [Name,SetName] = useState('');
-   let [Date,SetDate] = useState('');
+   let [DOB,SetDOB] = useState('');
    let [Address,SetAddress] = useState('');
    let [Photo,SetPhoto] = useState('');
-   let [Image,SetImage] = useState('');
+   let [Loading,SetLoading] = useState(false);
+
    let Navigate = useNavigate();
    let Token = useSelector((store)=>{
     return store.User.Token;
@@ -17,10 +19,18 @@ function ApplicationForm(props) {
     return store.User.User.UserID
    })
 
+   let calulateage = (url) => {
+    let birth = new Date(DOB);
+    let difference = Date.now() - birth.getTime();
+    let agedate = new Date(difference);
+    let age = Math.abs(agedate.getUTCFullYear() - 1970);
+    postform(url,age)
+   }
 
-   let postform = async(url) => {
-        try {
-            let result = await fetch('http://localhost:8000/application/v1/create',{
+   let postform = async(url,age) => {
+    // console.log(Age);    
+    try {
+            let result = await fetch('https://formeaseserver.onrender.com/application/v1/create',{
                 method:'POST',
                 headers:{
                     'Content-Type':'application/json',
@@ -28,23 +38,27 @@ function ApplicationForm(props) {
                 },
                 body:JSON.stringify({
                     Name,
-                    DOB:Date,
+                    DOB,
                     Address,
                     Photo:url,
-                    UserID
+                    UserID,
+                    Age:age
                 })
             });
             let response = await result.json();
             alert(response.Message);
+            // SetLoading(false);
             Navigate('/profile')
         } catch (error) {
             console.log(error);
+            // SetLoading(false)
         }
    }
 
    let submitapplication = (e) => {
     e.preventDefault();
-    if(!Photo || !Name || !Date || !Address){
+    SetLoading(true)
+    if(!Photo || !Name || !DOB || !Address){
         return alert('All feilds required')
     }
     let data = new FormData();
@@ -64,10 +78,12 @@ function ApplicationForm(props) {
         
     }).then((response)=>{
         // SetImage(response.url);
-        postform(response.url);
+        calulateage(response.url);
+        SetLoading(false)
         
     }).catch((error)=>{
         console.log(error);
+        SetLoading(false)
     })
 
 
@@ -76,25 +92,27 @@ function ApplicationForm(props) {
    return (
         <div className='applicationform_main'> 
             <h1>Application Form.</h1>
-            <form className='application_form' onSubmit={submitapplication}>
+            {
+                Loading ? <LoadingComp Text={'Submitting Application'}/> : <form className='application_form' onSubmit={submitapplication}>
                 <label>Name *</label>
                 <input type="text" placeholder='Name' className='application_form_input' onChange={(e)=>{
                     SetName(e.target.value);
                 }}/>
                 <label>Date of Birth</label>
                 <input type="date" className='application_form_input' onChange={(e)=>{
-                    SetDate(e.target.value);
+                    SetDOB(e.target.value);
                 }}/>
                 <label>Address</label>
                 <textarea className='application_form_input_address' cols="30" rows="10" placeholder='Address' onChange={(e)=>{
                     SetAddress(e.target.value)
                 }}></textarea>
                 <label>Photo *</label>
-                <input type="file" className='application_for_input_image' onChange={(e)=>{
+                <input type="file" className='application_for_input_image' accept='image/png' onChange={(e)=>{
                     SetPhoto(e.target.files[0]);
                 }}/>
                 <input type="submit" value='Submit' className='application_form_submit_btn'/>
             </form>
+            }
         </div>
     );
 } 

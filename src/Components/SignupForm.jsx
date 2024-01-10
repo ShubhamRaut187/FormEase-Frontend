@@ -1,15 +1,21 @@
 import React,{useState} from 'react';
 import './Component Styles/SignupForm.css'
+import LoadingComp from './LoadingComp';
 
 
 function SignupForm({SetPage}) {
     let [Email,SetEmail] = useState('');
     let [Password,SetPassword] = useState('');
     let [Name,SetName] = useState('');
-    
+    let [Loading,SetLoading] = useState(false);
+
     const createuser = async(e) => {
         e.preventDefault();
-        fetch('http://localhost:8000/auth/v1/signup',{
+        SetLoading(true);
+        if(!Email || !Password || !Name){
+            return alert('Fill all fields.')
+        }
+        fetch('https://formeaseserver.onrender.com/auth/v1/signup',{
             method:'POST',
             headers:{
                 'Content-Type':'application/json'
@@ -33,8 +39,10 @@ function SignupForm({SetPage}) {
             else{
                 alert(response.Message);
             }
+            SetLoading(false);
         }).catch((error)=>{
             console.log(error);
+            SetLoading(false);
         })
     }
     
@@ -47,7 +55,8 @@ function SignupForm({SetPage}) {
             <div className='signup_form_div'>
                 <h2>Signup to your account.</h2>
                 <p>Password must be atleast 8 character long, must have a one uppercase, one lowercase letter, a number and a special character.</p>
-                <form className='signup_form' onSubmit={createuser}>
+                {
+                    Loading ? <LoadingComp Text={'Signing in...'}/> : <form className='signup_form' onSubmit={createuser}>
                     <label>Name *</label>
                     <input type="text" className='signup_form_input' placeholder='Name' onChange={(e)=>{
                         SetName(e.target.value);
@@ -62,6 +71,7 @@ function SignupForm({SetPage}) {
                     }}/>
                     <input className='signup_form_submit_btn' type="submit" value='Signup'/>
                 </form>
+                }
                 <p className='signup_signup_text' onClick={()=>{
                     SetPage({
                         Title:'Login',

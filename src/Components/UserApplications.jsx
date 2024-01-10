@@ -6,6 +6,7 @@ import { useSelector } from 'react-redux';
 
 function UserApplications(props) {
     let [Applications,SetApplications] = useState([]);
+    
     let Token = useSelector((store)=>{
         return store.User.Token;
     })
@@ -15,7 +16,7 @@ function UserApplications(props) {
     useEffect(()=>{
         let getData = async() => {
             try {
-                let result = await fetch(`http://localhost:8000/application/v1/all/${UserID}`,{
+                let result = await fetch(`https://formeaseserver.onrender.com/application/v1/all/${UserID}`,{
                     headers:{
                         'authorization':`Bearer ${Token}`
                     }
@@ -30,7 +31,9 @@ function UserApplications(props) {
     },[Token,UserID])
     return (
         <div className='user_applications_main'>
-            <ApplicationSlider Applications={Applications}/>
+            {
+                Applications.length > 0 ? <ApplicationSlider Applications={Applications}/> : <NoApplication/>
+            }
         </div>
     );
 }

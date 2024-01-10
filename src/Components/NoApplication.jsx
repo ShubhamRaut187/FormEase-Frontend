@@ -4,7 +4,7 @@ import './Component Styles/NoApplication.css'
 function NoApplication(props) {
     return (
         <div className='no_application_main'>
-            <h1>No Applications Found.</h1>
+            <h1>Your Applications.</h1>
         </div>
     );
 }
