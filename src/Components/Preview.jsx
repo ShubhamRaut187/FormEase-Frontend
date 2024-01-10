@@ -16,6 +16,9 @@ function Preview(props) {
     let DownloadPDF = () => {
         let pdf = new jsPDF();
 
+        let URL = Application.Photo.replace('http','https')
+        // console.log(URL);
+
         let Width = pdf.internal.pageSize.getWidth();
         const Center = Width / 2;
 
@@ -26,7 +29,7 @@ function Preview(props) {
         pdf.setFont('times','bold')
         pdf.text('Application Form',Center,20,{align:'center'});
         
-        pdf.addImage(Application.Photo,'PNG',Center-20,25,50,50)
+        pdf.addImage(URL,'PNG',Center-20,25,50,50)
 
         pdf.setFontSize(16);
         pdf.setTextColor('#222e50');
