@@ -1,6 +1,9 @@
 # FormEase.com 📄
 FormEase is a robust and user-friendly web application developed using the MERN (MongoDB, Express.js, React, Node.js) stack, designed to streamline the process of submitting and managing applications seamlessly. The application boasts a well-structured architecture that ensures a smooth and efficient experience for users.FormEase provides a secure and personalized environment with user authentication. Users can easily create an account through the signup page, and once registered, they can log in securely to access the full suite of features.Authenticated users have the ability to submit application forms effortlessly. The application pages offer an intuitive and user-friendly interface, guiding users through the process of filling out their information with ease. The dynamic form layout adapts to various application requirements, making it versatile for a range of purposes.To facilitate record-keeping and offline access, authenticated users can conveniently download PDF versions of their submitted applications directly from their profile page. This feature ensures that users have a portable and easily shareable format of their application records.
 
+## Interview Task Explanation
+https://drive.google.com/file/d/1pAc4knpsYvA6SfXRyj5mUxGXxZ3mWAZe/view?usp=sharing
+
 # Tech Stack 📚
 1. React js
 2. Redux.
