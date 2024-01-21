@@ -10,7 +10,8 @@ function ApplicationForm(props) {
    let [Address,SetAddress] = useState('');
    let [Photo,SetPhoto] = useState('');
    let [Loading,SetLoading] = useState(false);
-
+    let[NumberOne,SetNumberOne] = useState(0);
+    let [NumberTwo,SetNumberTwo] = useState(0);
    let Navigate = useNavigate();
    let Token = useSelector((store)=>{
     return store.User.Token;
@@ -19,15 +20,40 @@ function ApplicationForm(props) {
     return store.User.User.UserID
    })
 
+   let calsum = (num1,num2)=>{
+  let n1 = Number(num1);
+  let n2 = Number(num2);
+    let sum = 0;
+    let count = 0;
+    let Series = [];
+    for(let i=n1;i<=n2;i++){
+        console.log(i);
+        sum = sum+i;
+       count++;
+       Series.push(i);
+    }
+    console.log(n1,n2);
+    let avg = sum / count;
+    console.log(avg,sum);
+    return {
+        Average:avg.toFixed(1),
+        Sum:sum,
+        Series:Series
+    }
+
+    
+   }
+
    let calulateage = (url) => {
     let birth = new Date(DOB);
     let difference = Date.now() - birth.getTime();
     let agedate = new Date(difference);
     let age = Math.abs(agedate.getUTCFullYear() - 1970);
-    postform(url,age)
+    let calculations = calsum(NumberOne,NumberTwo);
+    postform(url,age,calculations)
    }
 
-   let postform = async(url,age) => {
+   let postform = async(url,age,data) => {
     // console.log(Age);    
     try {
             let result = await fetch('https://formeaseserver.onrender.com/application/v1/create',{
@@ -42,7 +68,12 @@ function ApplicationForm(props) {
                     Address,
                     Photo:url,
                     UserID,
-                    Age:age
+                    Age:age,
+                    Average:data.Average,
+                    Sum:data.Sum,
+                    NumberOne,
+                    NumberTwo,
+                    Series:data.Series
                 })
             });
             let response = await result.json();
@@ -58,11 +89,20 @@ function ApplicationForm(props) {
    let submitapplication = (e) => {
     e.preventDefault();
     SetLoading(true)
-    if(!Photo || !Name || !DOB || !Address){
+    
+    if(!Photo || !Name || !DOB || !Address || !NumberOne || !NumberTwo){
         SetLoading(false)
         return alert('All feilds required')
         
     }
+    let num1 = Number(NumberOne);
+    let num2 = Number(NumberTwo)
+    if(num1 > num2){
+        SetLoading(false);
+        // console.log(NumberOne,NumberTwo);
+        return alert('Number one should not be greater than number two');
+    }
+
     let data = new FormData();
     data.append('file',Photo);
     data.append('upload_preset','formease');
@@ -104,6 +144,13 @@ function ApplicationForm(props) {
                 <input type="date" className='application_form_input' onChange={(e)=>{
                     SetDOB(e.target.value);
                 }}/>
+                <input type='number' placeholder='Number 1' onChange={(e)=>{
+                    SetNumberOne(e.target.value);
+                }}/>
+                <input type='number' placeholder='Number 2' onChange={(e)=>{
+                    SetNumberTwo(e.target.value);
+                }}/>
+                {/* <input type="num" /> */}
                 <label>Address</label>
                 <textarea className='application_form_input_address' cols="30" rows="10" placeholder='Address' onChange={(e)=>{
                     SetAddress(e.target.value)

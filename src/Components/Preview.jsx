@@ -3,7 +3,7 @@ import './Component Styles/Preview.css'
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import jsPDF from 'jspdf';
-
+import 'jspdf-autotable';
 
 
 function Preview(props) {
@@ -51,6 +51,28 @@ function Preview(props) {
         pdf.setFont('times','bold')
         pdf.text(`Address: ${Application.Address}`, Center, 120, { align: 'center' });
 
+        pdf.setFontSize(16);
+        pdf.setTextColor('#222e50');
+        pdf.setFont('times','bold')
+        pdf.text(`Sum: ${Application.Sum}`, Center, 130, { align: 'center' });
+
+        pdf.setFontSize(16);
+        pdf.setTextColor('#222e50');
+        pdf.setFont('times','bold')
+        pdf.text(`Average: ${Application.Average}`, Center, 140, { align: 'center' });
+
+        let tdata = [
+            ['Numbers','Sum','Average'],
+            
+            [[...Application.Series],Application.Sum,Application.Average],
+           
+        ]
+        pdf.autoTable({
+            head:tdata.splice(0,1),
+            body:tdata.splice(0),
+            startY:160
+        })
+        // pdf.text(`Address: ${Application.Average}`, Center, 500, { align: 'center' });
         // console.log(pdf.getFontList());
 
         pdf.save(`${Application._id}.pdf`);
@@ -85,6 +107,8 @@ function Preview(props) {
             <p className='preview_dob'>Date of Birth: {Application.DOB}</p>
             <p className='preview_age'>Age: {Application.Age}</p>
             <p className='preview_address'>Address: {Application.Address}</p>
+            <p className='preview_address'>Sum: {Application.Sum}</p>
+            <p className='preview_address'>Average:{Application.Average}</p>
             <button className='pdf_download_btn' onClick={DownloadPDF}>Download</button>
         </div>
     );

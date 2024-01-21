@@ -13,6 +13,7 @@ function SignupForm({SetPage}) {
         e.preventDefault();
         SetLoading(true);
         if(!Email || !Password || !Name){
+            SetLoading(false);
             return alert('Fill all fields.')
         }
         fetch('https://formeaseserver.onrender.com/auth/v1/signup',{
