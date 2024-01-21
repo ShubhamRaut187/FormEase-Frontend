@@ -97,10 +97,10 @@ function ApplicationForm(props) {
     }
     let num1 = Number(NumberOne);
     let num2 = Number(NumberTwo)
-    if(num1 > num2){
+    if(num1 > num2 || num1 === num2){
         SetLoading(false);
         // console.log(NumberOne,NumberTwo);
-        return alert('Number one should not be greater than number two');
+        return alert('Number one should not be greater than number two and both values should not be same');
     }
 
     let data = new FormData();
